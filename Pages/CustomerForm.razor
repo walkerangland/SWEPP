@@ -1,0 +1,47 @@
+﻿@page "/customer-form"
+@inject SWEPP.Services.CustomerService CustomerService
+@using SWEPP.Models
+
+<h3>Add New Customer</h3>
+
+<EditForm Model="newCustomer" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name:</label>
+        <InputText @bind-Value="newCustomer.Name" />
+    </div>
+    <div>
+        <label>Phone Number:</label>
+        <InputText @bind-Value="newCustomer.PhoneNumber" />
+    </div>
+    <div>
+        <label>Address:</label>
+        <InputText @bind-Value="newCustomer.Address" />
+    </div>
+    <div>
+        <label>Subdivision:</label>
+        <InputText @bind-Value="newCustomer.Subdivision" />
+    </div>
+    <div>
+        <label>Major Intersection:</label>
+        <InputText @bind-Value="newCustomer.MajorIntersection" />
+    </div>
+    <div>
+        <label>Payment Type:</label>
+        <InputText @bind-Value="newCustomer.PaymentType" />
+    </div>
+
+    <button type="submit">Add Customer</button>
+</EditForm>
+
+@code {
+    private Customer newCustomer = new Customer();
+
+    private void HandleValidSubmit()
+    {
+        CustomerService.AddCustomer(newCustomer);
+        newCustomer = new Customer();
+    }
+}

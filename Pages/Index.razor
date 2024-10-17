@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject SWEPP.Services.CustomerService CustomerService
+
+
+@if (CustomerService.LoggedInCustomer != null)
+{
+    <h3>Welcome, @CustomerService.LoggedInCustomer.Name!</h3>
+    <button @onclick="Logout">Log Out</button>
+}
+else
+{
+    <h3>Welcome to SWEPP Pizza Ordering System</h3>
+    <button @onclick="NavigateToLogin">Log In</button>
+    <button @onclick="NavigateToSignUp">Sign Up</button>
+}
+
+@code {
+    private void NavigateToLogin()
+    {
+
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void NavigateToSignUp()
+    {
+
+        NavigationManager.NavigateTo("/sign-up");
+    }
+
+    private void Logout()
+    {
+        CustomerService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}

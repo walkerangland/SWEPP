@@ -1,0 +1,53 @@
+﻿@page "/login"
+@inject SWEPP.Services.CustomerService CustomerService
+@inject NavigationManager NavigationManager
+
+<h3>Log In</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Phone Number:</label>
+        <InputText @bind-Value="loginModel.PhoneNumber" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <InputText @bind-Value="loginModel.Password" type="password" />
+    </div>
+
+    <button type="submit">Log In</button>
+</EditForm>
+
+@if (loginFailed)
+{
+    <p style="color: red;">Invalid phone number or password</p>
+}
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private bool loginFailed = false;
+
+    private void HandleLogin()
+    {
+        var customer = CustomerService.ValidateCustomer(loginModel.PhoneNumber, loginModel.Password);
+        
+        if (customer != null)
+        {
+            loginFailed = false;
+            CustomerService.Login(customer);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            loginFailed = true;
+        }
+    }
+
+    private class LoginModel
+    {
+        public string PhoneNumber { get; set; }
+        public string Password { get; set; }
+    }
+}
