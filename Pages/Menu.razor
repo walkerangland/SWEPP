@@ -1,0 +1,47 @@
+﻿@page "/menu"
+@inject SWEPP.Services.OrderService OrderService
+@using SWEPP.Models
+
+<h3>Our Menu</h3>
+
+@if (!string.IsNullOrEmpty(feedbackMessage))
+{
+    <div class="alert">@feedbackMessage</div>
+}
+
+@foreach (var pizza in availablePizzas)
+{
+    <div class="menu-item">
+        <h4>@pizza.Name - @pizza.Price.ToString("C")</h4>
+        <p>Size: @pizza.Size</p>
+        <p>Crust: @pizza.Crust</p>
+        <p>Toppings: @string.Join(", ", pizza.Toppings)</p>
+        <button class="btn btn-primary" @onclick="() => AddToOrder(pizza)">Add to Cart</button>
+        <hr />
+    </div>
+}
+
+@code {
+    private List<Pizza> availablePizzas = new List<Pizza>
+    {
+        new Pizza { Name = "Pepperoni Pizza", Size = "Large", Crust = "Thin", Price = 12.99M, Toppings = new List<string> { "Pepperoni", "Cheese" } },
+        new Pizza { Name = "Veggie Pizza", Size = "Medium", Crust = "Thick", Price = 10.99M, Toppings = new List<string> { "Bell Peppers", "Onions", "Mushrooms" } },
+        // Add more pizzas here as needed
+    };
+
+    private string? feedbackMessage;
+
+    private void AddToOrder(Pizza pizza)
+    {
+        OrderService.AddToOrder(pizza);
+        feedbackMessage = $"{pizza.Name} has been added to your cart!";
+        StateHasChanged();
+
+        // Clear the feedback message after 3 seconds
+        Task.Delay(3000).ContinueWith(_ =>
+        {
+            feedbackMessage = null;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+}

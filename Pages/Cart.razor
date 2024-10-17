@@ -1,0 +1,29 @@
+﻿@page "/cart"
+@inject NavigationManager NavigationManager
+@inject SWEPP.Services.OrderService OrderService
+
+<h3>Your Cart</h3>
+
+@if (OrderService.CurrentOrder.Pizzas.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <ul>
+        @foreach (var pizza in OrderService.CurrentOrder.Pizzas)
+        {
+            <li>@pizza.Name - @pizza.Price.ToString("C")</li>
+        }
+    </ul>
+    <h4>Total: @OrderService.CurrentOrder.TotalPrice.ToString("C")</h4>
+    <button @onclick="Checkout">Checkout</button>
+}
+
+@code {
+    private void Checkout()
+    {
+        OrderService.ClearOrder();
+        NavigationManager.NavigateTo("/");
+    }
+}

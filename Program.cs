@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using SWEPP.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+
+builder.Services.AddSingleton<OrderService>();
 builder.Services.AddSingleton<CustomerService>();
 
 var app = builder.Build();
