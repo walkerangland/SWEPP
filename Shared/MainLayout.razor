@@ -1,8 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject SWEPP.Services.CustomerService CustomerService
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="layout-wrapper">
+    <div class="header">
+
+        <div class="company-name">
+            <h1>Golden Crust Pizza</h1>
+        </div>
+
+        <div class="welcome-message">
+            @if (CustomerService.LoggedInCustomer != null)
+            {
+                <span>Welcome, @CustomerService.LoggedInCustomer.Name!</span>
+                <button @onclick="Logout">Log Out</button>
+            }
+        </div>
     </div>
 
     <main>
@@ -10,16 +23,61 @@
     </main>
 </div>
 
+@code {
+    void Logout()
+    {
+        CustomerService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}
+
 <style>
-    .page {
+    .layout-wrapper {
         display: flex;
+        flex-direction: column;
+        height: 100vh;
     }
-    .sidebar {
-        width: 200px;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
         background-color: #f8f9fa;
+        box-shadow: 0 4px 2px -2px gray;
     }
+
+    .company-name h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .welcome-message {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .welcome-message span {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .welcome-message button {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .welcome-message button:hover {
+        background-color: #d32f2f;
+    }
+
     main {
-        padding: 20px;
         flex-grow: 1;
+        padding: 20px;
+        text-align: center;
     }
 </style>
